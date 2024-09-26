@@ -16,7 +16,7 @@ fun isNum(input: String): Boolean {
         else -> false
     }
 }
-fun CSVToColumns(filePath: Path): Map<String, List<String>>{
+fun csvToColumns(filePath: Path): Map<String, List<String>>{
     val br = Files.newBufferedReader(filePath)
     val rows = mutableListOf<List<String>>()
     br.use { bufferedReader ->
@@ -40,7 +40,6 @@ fun statsToCSV(data: Map<String, List<String>>, path: Path) {
     Files.write(path, "Columna;Mínimo;Máximo;Media\n".toByteArray(), StandardOpenOption.CREATE, StandardOpenOption.APPEND)
 
     for ((key, value) in data) {
-        var lineToWrite = ""
         val valueDouble = mutableListOf<Double>()
         value.forEach { item ->
             if (isNum(item)){
@@ -51,7 +50,7 @@ fun statsToCSV(data: Map<String, List<String>>, path: Path) {
             val min = valueDouble.min()
             val max = valueDouble.max()
             val average = valueDouble.average()
-            lineToWrite = "${key};${min};${max};${"%.2f".format(average)}\n"
+            val lineToWrite = "${key};${min};${max};${"%.2f".format(average)}\n"
             Files.write(path, lineToWrite.toByteArray(), StandardOpenOption.APPEND)
         }
 
@@ -62,6 +61,6 @@ fun main() {
     val filePath = Path.of("src", "main", "resources", "cotizacion.csv")
     val outputFilePath = Path.of("src","main","resources","output.csv")
 
-    val columnData = CSVToColumns(filePath)
+    val columnData = csvToColumns(filePath)
     statsToCSV(columnData, outputFilePath)
 }
