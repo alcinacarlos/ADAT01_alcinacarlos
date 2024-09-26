@@ -7,16 +7,18 @@ fun convertToDouble(value: String): Double {
     val cleanedValue = value.replace(".", "").replace(",", ".")
     return cleanedValue.toDouble()
 }
+
 fun isNum(input: String): Boolean {
     val numero = input.replace(".", "").replace(",", ".")
-    return when{
+    return when {
         numero.toIntOrNull() != null -> true
         numero.toDoubleOrNull() != null -> true
         numero.toLongOrNull() != null -> true
         else -> false
     }
 }
-fun csvToColumns(filePath: Path): Map<String, List<String>>{
+
+fun csvToColumns(filePath: Path): Map<String, List<String>> {
     val br = Files.newBufferedReader(filePath)
     val rows = mutableListOf<List<String>>()
     br.use { bufferedReader ->
@@ -27,26 +29,32 @@ fun csvToColumns(filePath: Path): Map<String, List<String>>{
     }
     val column = mutableMapOf<String, List<String>>()
     val headers = rows.first()
-    for (i in headers.indices){
+    for (i in headers.indices) {
         val listaDatos = mutableListOf<String>()
-        for (row in rows.drop(1)){
+        for (row in rows.drop(1)) {
             listaDatos.add(row[i])
         }
         column[headers[i]] = listaDatos
     }
     return column
 }
+
 fun statsToCSV(data: Map<String, List<String>>, path: Path) {
-    Files.write(path, "Columna;Mínimo;Máximo;Media\n".toByteArray(), StandardOpenOption.CREATE, StandardOpenOption.APPEND)
+    Files.write(
+        path,
+        "Columna;Mínimo;Máximo;Media\n".toByteArray(),
+        StandardOpenOption.CREATE,
+        StandardOpenOption.APPEND
+    )
 
     for ((key, value) in data) {
         val valueDouble = mutableListOf<Double>()
         value.forEach { item ->
-            if (isNum(item)){
+            if (isNum(item)) {
                 valueDouble.add(convertToDouble(item))
             }
         }
-        if (valueDouble.size > 0){
+        if (valueDouble.size > 0) {
             val min = valueDouble.min()
             val max = valueDouble.max()
             val average = valueDouble.average()
@@ -59,7 +67,7 @@ fun statsToCSV(data: Map<String, List<String>>, path: Path) {
 
 fun main() {
     val filePath = Path.of("src", "main", "resources", "cotizacion.csv")
-    val outputFilePath = Path.of("src","main","resources","output.csv")
+    val outputFilePath = Path.of("src", "main", "resources", "output.csv")
 
     val columnData = csvToColumns(filePath)
     statsToCSV(columnData, outputFilePath)
