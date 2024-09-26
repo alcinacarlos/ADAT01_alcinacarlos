@@ -50,7 +50,7 @@ fun statsToCSV(data: Map<String, List<String>>, path: Path) {
             val min = valueDouble.min()
             val max = valueDouble.max()
             val average = valueDouble.average()
-            val lineToWrite = "${key};${min};${max};${"%.2f".format(average)}\n"
+            val lineToWrite = "${key};${"%.2f".format(min)};${"%.2f".format(max)};${"%.2f".format(average)}\n"
             Files.write(path, lineToWrite.toByteArray(), StandardOpenOption.APPEND)
         }
 
