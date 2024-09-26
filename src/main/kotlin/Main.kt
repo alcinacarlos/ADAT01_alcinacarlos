@@ -1,6 +1,8 @@
+import java.io.FileNotFoundException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
+import kotlin.io.path.notExists
 
 fun convertToDouble(value: String): Double {
     // Eliminar puntos que separan miles y reemplazar la coma decimal por un punto
@@ -20,6 +22,7 @@ fun isNum(input: String): Boolean {
 
 fun csvToColumns(filePath: Path): Map<String, List<String>> {
     val br = Files.newBufferedReader(filePath)
+    if (filePath.notExists()) throw FileNotFoundException("No existe el fichero ${filePath}")
     val rows = mutableListOf<List<String>>()
     br.use { bufferedReader ->
         bufferedReader.forEachLine { line ->
